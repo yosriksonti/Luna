@@ -1,6 +1,6 @@
 const OpenAI = require("openai");
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: "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",
   organization: "org-4pZyMecDsAioe5GBBpOeSskR"
 });
 let messages = [];
