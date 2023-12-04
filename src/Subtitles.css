@@ -1,0 +1,22 @@
+.subtitles-container {
+    position: fixed;
+    float:left;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #02201aee;
+    border-radius: 40px;
+    /*white-space: nowrap;
+     Prevent text from wrapping to the next line 
+    /overflow: hidden;
+    /* Hide any overflowing text 
+    text-overflow: ellipsis;
+    /* Optionally, you can add an ellipsis (...) if text overflows */
+}
+
+.subtitles-text {
+    padding-left: 20px;
+    padding-right: 20px;
+    color: #fff;
+    text-align: center;
+}

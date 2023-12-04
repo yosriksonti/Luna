@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Context</title>
+</head>
+
+<body>
+    <h1>Setup Context</h1>
+    <form id="contextForm" action="https://mouvmntchatbotback.onrender.com/SetupContext" method="POST">
+        <textarea id="contextTextarea" name="context" rows="5" cols="40"></textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        document.getElementById('contextForm').addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevent the default form submission
+
+            const contextTextarea = document.getElementById('contextTextarea');
+            const context = contextTextarea.value;
+            // Create a hidden input field to hold the context value
+
+
+            // Append the hidden input to the form
+            const contextForm = document.getElementById('contextForm');
+
+            // Submit the form
+            contextForm.submit();
+        });
+    </script>
+</body>
+
+</html>

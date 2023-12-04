@@ -1,0 +1,189 @@
+*,
+*:after,
+*:before {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.voice_to_text {
+    width: 600px;
+    text-align: center;
+}
+
+h1 {
+    color: #fff;
+    font-size: 50px;
+}
+
+#convert_text {
+    width: 100%;
+    height: 200px;
+    border-radius: 10px;
+    resize: none;
+    padding: 10px;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 12px 20px;
+    background: #0ea4da;
+    border: 0;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.countries-icons {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    z-index: 20;
+}
+
+.loading {
+    position: fixed;
+    bottom: 10vh;
+    left: 46vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
+}
+
+.countries-icons img {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+
+#france {
+    display: none;
+}
+
+#tunisie {
+    display: none;
+}
+
+#british {
+    display: none;
+}
+
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: grey;
+}
+
+#roundedDiv {
+    background-color: black;
+    width: 73%;
+    height: 7vh;
+    border-radius: 80px;
+    /* 60px radius for rounded corners */
+    position: absolute;
+    top: 40px;
+    /* 40px top margin */
+    left: 40px;
+    /* 40px left margin */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.center-image {
+    width: 7vw;
+    /* Adjust the image size as needed */
+    height: 7vw;
+    /* Adjust the image size as needed */
+}
+
+#mouvmntLogo {
+    width: 56%;
+    /* 55% width of the parent div */
+    height: auto;
+    /* Maintain aspect ratio */
+    margin-left: 2%;
+}
+
+#topRightImageContainer {
+    position: absolute;
+    top: 40px;
+    /* 40px top margin */
+    right: 20px;
+    /* 20px right margin */
+    height: 7vh;
+    /* Same height as the parent div */
+    width: 7vh;
+    /* 82% of the parent div width */
+    display: flex;
+    justify-content: center;
+    /* Center the image horizontally */
+    align-items: center;
+    /* Center the image vertically */
+    border-radius: 15px;
+    /* Rounded corners for the container */
+    background-color: white;
+    /* Background color for the container */
+}
+
+#topRightImage {
+    width: 100%;
+    /* 100% of the container width */
+    max-height: 100%;
+    /* Ensure the image fits within the container's height */
+}
+
+#bottomRightDiv {
+    position: fixed;
+    bottom: 20px;
+    /* Adjust the distance from the bottom */
+    right: 20px;
+    /* Adjust the distance from the right */
+}
+
+.circular-image {
+    border-radius: 50%;
+    display: block;
+    margin: 5px 0;
+    /* Adjust the margin between the images */
+}
+
+#firstCircularImage {
+    width: 150px;
+    /* 1.5 times the width of the second image */
+    height: 150px;
+    /* 1.5 times the height of the second image */
+}
+
+.bottom-right {
+    position: absolute;
+    bottom: 5vw;
+    right: 5vw;
+    width: 10vw;
+    height: auto;
+}
+
+.bottom-center {
+    position: absolute;
+    bottom: 11%;
+    left: 37%;
+    transform: translateX(-30%);
+}
+
+.small-image {
+    width: 50%;
+    /* Set the width to one-third of the original size */
+    height: auto;
+    /* Maintain aspect ratio */
+}
