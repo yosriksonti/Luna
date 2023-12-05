@@ -1,7 +1,7 @@
 const OpenAI = require("openai");
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  organization: "org-Zua0pFKCoc51KJMs34RNIUAa"
+  organization: "org-4pZyMecDsAioe5GBBpOeSskR"
 });
 let messages = [];
 async function askGPT(prompt, systemContent, reset) {
