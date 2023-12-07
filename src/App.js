@@ -21,7 +21,8 @@ import axios from 'axios';
 import Subtitles from './Subtitles';
 const _ = require('lodash');
 const sdk = require("microsoft-cognitiveservices-speech-sdk");
-const host = 'http://localhost:5000';
+const host = 'https://luna-backend-yqsl.onrender.com'
+// const host = 'http://localhost:5000';
 // const host = 'https://mouvmntchatbotback.onrender.com';
 let subtitleFileName = '';
 let language = "french";
