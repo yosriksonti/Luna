@@ -48,7 +48,7 @@ let timerResetId;
 let reset = false;
 let gltf;
 
-let langIndex = 9
+let langIndex =54
 
 // Create a SpeechConfig object with your endpoint and key
 //const speechConfig = sdk.SpeechConfig.fromEndpoint(urll, apiKey);
@@ -628,10 +628,11 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         // filename = host + filename;
         setClips(newClips);
         console.log("SI",speech,langIndex);
-        setPlaying(true);
+        setPlaying(true)
+        animate(newClips);
         easySpeak(speech,langIndex).then(() => {
           console.log("DONE");
-          setPlaying(false);
+          setPlaying(false)
           setIdle();
         });
 
@@ -696,10 +697,20 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
   }, []);
 
 
+function animate(newClips) {
+  console.log("CLIPS",newClips.length)
+  _.each(newClips, clip => {
+    let clipAction = mixer.clipAction(clip);
+    clipAction.setLoop(THREE.LoopOnce);
+    //if (language == "french") clipAction.timeScale = 1.2;
+    //else if (language == "arabic") clipAction.timeScale = 1.03;
+    clipAction.play();
 
+  });
+}
   // Play animation clips when available
   useEffect(() => {
-
+    console.log("PLAYER",playing)
     if (playing === false)
       return;
 
@@ -799,8 +810,8 @@ function App() {
   // End of play
   function playerEnded(e) {
     setAudioSource(null);
-    setSpeak(false);
-    setPlaying(false);
+    // setSpeak(false);
+    // setPlaying(false);
     if (!firstTime) {
       canSpeak = true;
       //STATE WAITING
@@ -878,7 +889,7 @@ function App() {
 
   // Player is read
   function playerReady(e) {
-    audioPlayer.current.audioEl.current.play();
+    //audioPlayer.current.audioEl.current.play();
     setPlaying(true);
     if (!firstTime) {
       if (language === "english") CreatingSubtitlesFromFile();
