@@ -52,7 +52,7 @@ let langIndex = 9
 
 // Create a SpeechConfig object with your endpoint and key
 //const speechConfig = sdk.SpeechConfig.fromEndpoint(urll, apiKey);
-function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, setLoading, audioPlayer, easySpeak, playerEnded, setIdle }) {
+function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, setLoading, audioPlayer, easySpeak, playerEnded, setIdle, setPlaying }) {
   let zeroDiv = document.getElementById("stateZeroDiv");
   let waitingDiv = document.getElementById("stateWaitingDiv");
   let listeningDiv = document.getElementById("stateListeningDiv");
@@ -628,12 +628,13 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         // filename = host + filename;
         setClips(newClips);
         console.log("SI",speech,langIndex);
-        setAudioSource("/zero.mp3");
+        setPlaying(true);
         easySpeak(speech,langIndex).then(() => {
           console.log("DONE");
-          setAudioSource(null);
+          setPlaying(false);
           setIdle();
         });
+
         
         subtitleFileName = filena;
         if (language === "arabic" || language === "french") {
@@ -1011,6 +1012,7 @@ function App() {
             // selectedVoice={selectedVoice}
             playerEnded={playerEnded}
             setIdle={setIdle}
+            setPlaying={setPlaying}
           />
           
         </Suspense>
