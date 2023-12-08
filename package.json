@@ -1,6 +1,5 @@
 {
   "name": "abc",
-  "homepage": "https://maginater.com/chatbot001",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
