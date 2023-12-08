@@ -48,11 +48,11 @@ let timerResetId;
 let reset = false;
 let gltf;
 
-let langIndex =54
+let langIndex = 9
 
 // Create a SpeechConfig object with your endpoint and key
 //const speechConfig = sdk.SpeechConfig.fromEndpoint(urll, apiKey);
-function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, setLoading, audioPlayer, easySpeak, playerEnded, setIdle, setPlaying }) {
+function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, setLoading, audioPlayer, easySpeak, playerEnded, setIdle, setPlaying, frLang, enLang, arLang }) {
   let zeroDiv = document.getElementById("stateZeroDiv");
   let waitingDiv = document.getElementById("stateWaitingDiv");
   let listeningDiv = document.getElementById("stateListeningDiv");
@@ -514,7 +514,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
     console.log("TEXT", voiceMessage, "LANG", recognition.lang);
     if (recognition.lang === 'ar-TN') {
       if (voiceMessage.includes("تغيير") && voiceMessage.includes("فرنسيه")) {
-        langIndex = 9
+        langIndex = frLang
         //CHANGE TO FRENCH
         recognition.lang = 'fr-FR';
         //language = "french";
@@ -525,11 +525,12 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         //  document.getElementById("click_to_record").style.display = "inline";
         canSpeak = true;
         playerEnded();
+        setIdle()
         return;
       }
       else if (voiceMessage.includes("تغيير") && voiceMessage.includes("انجليزيه")) {
         //CHANGE TO FRENCH
-        langIndex = 5
+        langIndex = enLang
         recognition.lang = 'en-US';
         //language = "english";
         //document.getElementById('tunisie').style.display = 'none';
@@ -539,6 +540,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         //  document.getElementById("click_to_record").style.display = "inline";
         canSpeak = true;
         playerEnded();
+        setIdle()
         return;
       }
     }
@@ -546,7 +548,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
       if (voiceMessage.includes("change") && voiceMessage.includes("arabe")) {
         //CHANGE TO FRENCH
         recognition.lang = 'ar-TN';
-        langIndex = 30
+        langIndex = arLang
         //language = "arabic";
         //document.getElementById('tunisie').style.display = 'none';
         //document.getElementById('british').style.display = 'none';
@@ -555,11 +557,12 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         //  document.getElementById("click_to_record").style.display = "inline";
         canSpeak = true;
         playerEnded();
+        setIdle()
         return;
       }
       else if (voiceMessage.includes("change") && voiceMessage.includes("anglais")) {
         //CHANGE TO FRENCH
-        langIndex = 5
+        langIndex = enLang
         recognition.lang = 'en-US';
         //language = "english";
         //document.getElementById('tunisie').style.display = 'none';
@@ -569,6 +572,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         //  document.getElementById("click_to_record").style.display = "inline";
         canSpeak = true;
         playerEnded();
+        setIdle()
         return;
       }
     }
@@ -576,7 +580,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
       if (voiceMessage.includes("change") && voiceMessage.includes("Arabic")) {
         //CHANGE TO FRENCH
         recognition.lang = 'ar-TN';
-        langIndex = 30
+        langIndex = arLang
         //language = "arabic";
         //document.getElementById('tunisie').style.display = 'none';
         //document.getElementById('british').style.display = 'none';
@@ -585,12 +589,13 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         //  document.getElementById("click_to_record").style.display = "inline";
         canSpeak = true;
         playerEnded();
+        setIdle()
         return;
       }
       else if (voiceMessage.includes("change") && voiceMessage.includes("French")) {
         //CHANGE TO FRENCH
         recognition.lang = 'fr-FR';
-        langIndex = 9
+        langIndex = frLang
         //language = "french";
         //document.getElementById('tunisie').style.display = 'none';
         //document.getElementById('british').style.display = 'none';
@@ -599,6 +604,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         //  document.getElementById("click_to_record").style.display = "inline";
         canSpeak = true;
         playerEnded();
+        setIdle()
         return;
       }
     }
@@ -628,20 +634,24 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         // filename = host + filename;
         setClips(newClips);
         console.log("SI",speech,langIndex);
-        setPlaying(true)
-        animate(newClips);
-        easySpeak(speech,langIndex).then(() => {
-          console.log("DONE");
-          setPlaying(false)
-          setIdle();
-        });
-
-        
         subtitleFileName = filena;
         if (language === "arabic" || language === "french") {
           currentSubtitle = speech;
         }
+        setPlaying(true)
+        animate(newClips);
+        easySpeak(speech,langIndex).then(() => {
+          console.log("DONE");
+          setAudioSource(null)
+          stopAnimation()
+          playerEnded()
+          setIdle();
+        });
         reset = false;
+
+
+        
+        
       })
       .catch(err => {
         console.error(err);
@@ -705,8 +715,28 @@ function animate(newClips) {
     //if (language == "french") clipAction.timeScale = 1.2;
     //else if (language == "arabic") clipAction.timeScale = 1.03;
     clipAction.play();
-
   });
+}
+
+function stopAnimation() {
+  mixer.stopAllAction()
+  let idleEyebrowClipAction = mixer.clipAction(gltf.animations[0]);
+  idleEyebrowClipAction.play();
+  let idleHairClipAction = mixer.clipAction(gltf.animations[1]);
+  idleHairClipAction.play();
+  let idleClipAction = mixer.clipAction(gltf.animations[2]);
+  idleClipAction.play();
+  let blinkClip = createAnimation(blinkData, morphTargetDictionaryBody, 'head');
+  let blinkAction = mixer.clipAction(blinkClip);
+  blinkAction.play();
+
+  let blinkUpperEyeLash = createAnimation(blinkData, morphTargetDictionaryUpperEyeLash, 'Upper_Eyelash');
+  let blinkUpperEyeLashAction = mixer.clipAction(blinkUpperEyeLash);
+  blinkUpperEyeLashAction.play();
+
+  let blinkLowerEyeLash = createAnimation(blinkData, morphTargetDictionaryLowerEyeLash, 'Lower_Eyelash');
+  let blinkLowerEyeLashAction = mixer.clipAction(blinkLowerEyeLash);
+  blinkLowerEyeLashAction.play();
 }
   // Play animation clips when available
   useEffect(() => {
@@ -776,12 +806,22 @@ function App() {
   // const [selectedIndex, setSelectedIndex] = useState();
   const [language, setLanguage] = useState('fr-FR');
   const [voices, setVoices] = useState([]);
+  const [frLang, setFrLang] = useState(9);
+  const [enLang, setEnLang] = useState(5);
+  const [arLang, setArLang] = useState(30);
   const populateVoiceList = useCallback(() => {
     const newVoices = EasySpeech.voices();
     setVoices(newVoices);
     console.log("VOICES", newVoices);
   }, []);
-
+  useEffect(() => {
+    let fr = voices.findIndex(voice => voice.lang === 'fr-CA')
+    langIndex = fr
+    setFrLang(voices.findIndex(voice => voice.lang === 'fr-CA'));
+    setEnLang(voices.findIndex(voice => voice.lang === 'en-AU'));
+    setArLang(voices.findIndex(voice => voice.lang === 'ar-SA'));
+    console.log("LANGS", fr);
+  }, [voices]);
   let synth = EasySpeech.detect()
 
   useEffect(() => {
@@ -800,7 +840,7 @@ function App() {
       text: speech,
       voice: voices[index], // optional, will use a default or fallback
       pitch: 1.2,
-      rate: 1,
+      rate: 0.8,
       volume: 1,
       // there are more events, see the API for supported events
       boundary: e => console.debug('boundary reached')
@@ -810,8 +850,8 @@ function App() {
   // End of play
   function playerEnded(e) {
     setAudioSource(null);
-    // setSpeak(false);
-    // setPlaying(false);
+    setSpeak(false);
+    setPlaying(false);
     if (!firstTime) {
       canSpeak = true;
       //STATE WAITING
@@ -1024,6 +1064,9 @@ function App() {
             playerEnded={playerEnded}
             setIdle={setIdle}
             setPlaying={setPlaying}
+            frLang={frLang}
+            enLang={enLang}
+            arLang={arLang}
           />
           
         </Suspense>
