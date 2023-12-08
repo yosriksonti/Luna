@@ -48,7 +48,7 @@ let timerResetId;
 let reset = false;
 let gltf;
 
-let langIndex = 9
+let langIndex =54
 
 // Create a SpeechConfig object with your endpoint and key
 //const speechConfig = sdk.SpeechConfig.fromEndpoint(urll, apiKey);
@@ -629,6 +629,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         setClips(newClips);
         console.log("SI",speech,langIndex);
         setPlaying(true)
+        animate(newClips);
         easySpeak(speech,langIndex).then(() => {
           console.log("DONE");
           setPlaying(false)
@@ -696,10 +697,20 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
   }, []);
 
 
+function animate(newClips) {
+  console.log("CLIPS",newClips.length)
+  _.each(newClips, clip => {
+    let clipAction = mixer.clipAction(clip);
+    clipAction.setLoop(THREE.LoopOnce);
+    //if (language == "french") clipAction.timeScale = 1.2;
+    //else if (language == "arabic") clipAction.timeScale = 1.03;
+    clipAction.play();
 
+  });
+}
   // Play animation clips when available
   useEffect(() => {
-    console.log("PLAYER")
+    console.log("PLAYER",playing)
     if (playing === false)
       return;
 
@@ -785,8 +796,6 @@ function App() {
     .catch(e => console.error(e))
 
   const easySpeak = async (speech, index) => {
-    setPlaying(true)
-    setSpeak(true)
     await EasySpeech.speak({
       text: speech,
       voice: voices[index], // optional, will use a default or fallback
