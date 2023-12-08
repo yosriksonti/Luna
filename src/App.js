@@ -628,10 +628,10 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         // filename = host + filename;
         setClips(newClips);
         console.log("SI",speech,langIndex);
-        setPlaying(true);
+        setPlaying(true)
         easySpeak(speech,langIndex).then(() => {
           console.log("DONE");
-          setPlaying(false);
+          setPlaying(false)
           setIdle();
         });
 
@@ -699,7 +699,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
 
   // Play animation clips when available
   useEffect(() => {
-
+    console.log("PLAYER")
     if (playing === false)
       return;
 
@@ -785,6 +785,8 @@ function App() {
     .catch(e => console.error(e))
 
   const easySpeak = async (speech, index) => {
+    setPlaying(true)
+    setSpeak(true)
     await EasySpeech.speak({
       text: speech,
       voice: voices[index], // optional, will use a default or fallback
@@ -799,8 +801,8 @@ function App() {
   // End of play
   function playerEnded(e) {
     setAudioSource(null);
-    setSpeak(false);
-    setPlaying(false);
+    // setSpeak(false);
+    // setPlaying(false);
     if (!firstTime) {
       canSpeak = true;
       //STATE WAITING
@@ -878,7 +880,7 @@ function App() {
 
   // Player is read
   function playerReady(e) {
-    audioPlayer.current.audioEl.current.play();
+    //audioPlayer.current.audioEl.current.play();
     setPlaying(true);
     if (!firstTime) {
       if (language === "english") CreatingSubtitlesFromFile();
