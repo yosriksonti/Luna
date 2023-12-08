@@ -48,7 +48,7 @@ let timerResetId;
 let reset = false;
 let gltf;
 
-let langIndex = 54
+let langIndex = 9
 
 // Create a SpeechConfig object with your endpoint and key
 //const speechConfig = sdk.SpeechConfig.fromEndpoint(urll, apiKey);
@@ -514,7 +514,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
     console.log("TEXT", voiceMessage, "LANG", recognition.lang);
     if (recognition.lang === 'ar-TN') {
       if (voiceMessage.includes("تغيير") && voiceMessage.includes("فرنسيه")) {
-        langIndex = 54
+        langIndex = 9
         //CHANGE TO FRENCH
         recognition.lang = 'fr-FR';
         //language = "french";
@@ -529,7 +529,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
       }
       else if (voiceMessage.includes("تغيير") && voiceMessage.includes("انجليزيه")) {
         //CHANGE TO FRENCH
-        langIndex = 50
+        langIndex = 5
         recognition.lang = 'en-US';
         //language = "english";
         //document.getElementById('tunisie').style.display = 'none';
@@ -559,7 +559,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
       }
       else if (voiceMessage.includes("change") && voiceMessage.includes("anglais")) {
         //CHANGE TO FRENCH
-        langIndex = 50
+        langIndex = 5
         recognition.lang = 'en-US';
         //language = "english";
         //document.getElementById('tunisie').style.display = 'none';
@@ -590,7 +590,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
       else if (voiceMessage.includes("change") && voiceMessage.includes("French")) {
         //CHANGE TO FRENCH
         recognition.lang = 'fr-FR';
-        langIndex = 54
+        langIndex = 9
         //language = "french";
         //document.getElementById('tunisie').style.display = 'none';
         //document.getElementById('british').style.display = 'none';
