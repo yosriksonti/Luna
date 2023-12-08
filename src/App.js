@@ -1,26 +1,26 @@
 import React, { Suspense, useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
-import { useGLTF, useTexture, Loader, Environment, useFBX, useAnimations, OrthographicCamera } from '@react-three/drei';
+import { useGLTF, useTexture, Loader, Environment, OrthographicCamera } from '@react-three/drei';
 import { MeshStandardMaterial } from 'three/src/materials/MeshStandardMaterial';
 import SyncLoader from "react-spinners/SyncLoader";
 import { LinearEncoding, sRGBEncoding } from 'three/src/constants';
-import { LineBasicMaterial, MeshPhysicalMaterial, Vector2 } from 'three';
+import { MeshPhysicalMaterial } from 'three';
 import ReactAudioPlayer from 'react-audio-player';
 import './App.css'; // Import the external CSS file
 import createAnimation from './converter';
 import blinkData from './blendDataBlink.json';
-import TalkData from './blendDataTalk.json';
-import ShutData from './blendDataShut.json';
+// import TalkData from './blendDataTalk.json';
+// import ShutData from './blendDataShut.json';
 import EasySpeech from 'easy-speech'
 
-import VoiceSelector from './components/VoiceSelector';
+// import VoiceSelector from './components/VoiceSelector';
 
 
 import * as THREE from 'three';
 import axios from 'axios';
 import Subtitles from './Subtitles';
 const _ = require('lodash');
-const sdk = require("microsoft-cognitiveservices-speech-sdk");
+// const sdk = require("microsoft-cognitiveservices-speech-sdk");
 const host = 'http://localhost:5000';
 // const host = 'https://mouvmntchatbotback.onrender.com';
 let subtitleFileName = '';
@@ -33,8 +33,8 @@ let voiceMessage = "";
 //let mediaRecorder; // MediaRecorder instance
 //let recordedChunks = []; // Array to store recorded audio chunks
 // Set your Azure Cognitive Services endpoint and key
-const endpoint = process.env.REACT_APP_AZURE_ENDPOINT;
-const apiKey = process.env.REACT_APP_AZURE_KEY;
+// const endpoint = process.env.REACT_APP_AZURE_ENDPOINT;
+// const apiKey = process.env.REACT_APP_AZURE_KEY;
 let stringList;
 let convertedTimes;
 let indexer = 0;
@@ -43,7 +43,7 @@ let context = "";
 let firstTime = true;
 let canSpeak = true;
 let timerResetId;
-const resetTimeout = 10000;
+// const resetTimeout = 10000;
 let reset = false;
 let gltf;
 
@@ -80,19 +80,19 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
     shoesNormalTexture,
     shoesRoughnessTexture,
   ] = useTexture([
-    "/chatbot001/model/TEX_Head_Col.png",
-    "/chatbot001/model/TEX_Head_Roughness.png",
-    "/chatbot001/model/eye.png",
+    "/model/TEX_Head_Col.png",
+    "/model/TEX_Head_Roughness.png",
+    "/model/eye.png",
     // "/images/teeth_specular.webp",
-    "/chatbot001/model/Tshirt_Base_color.png",
-    "/chatbot001/model/Tshirt_Normal_OpenGL.png",
-    "/chatbot001/model/Tshirt_Roughness.png",
-    "/chatbot001/model/Skirt_Base_color.png",
-    "/chatbot001/model/Skirt_Normal_OpenGL.png",
-    "/chatbot001/model/Skirt_Roughness.png",
-    "/chatbot001/model/Shoes_Base_color.png",
-    "/chatbot001/model/Shoes_Normal_OpenGL.png",
-    "/chatbot001/model/Shoes_Roughness.png",
+    "/model/Tshirt_Base_color.png",
+    "/model/Tshirt_Normal_OpenGL.png",
+    "/model/Tshirt_Roughness.png",
+    "/model/Skirt_Base_color.png",
+    "/model/Skirt_Normal_OpenGL.png",
+    "/model/Skirt_Roughness.png",
+    "/model/Shoes_Base_color.png",
+    "/model/Shoes_Normal_OpenGL.png",
+    "/model/Shoes_Roughness.png",
   ]);
 
   _.each([
@@ -122,7 +122,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
       node.castShadow = true;
       node.receiveShadow = true;
       node.frustumCulled = false;
-      if (node.name == "head") {
+      if (node.name === "head") {
         node.castShadow = true;
         node.receiveShadow = true;
 
@@ -144,7 +144,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         // node.material.visible = false;
 
       }
-      if (node.name == "body") {
+      if (node.name === "body") {
         node.castShadow = true;
         node.receiveShadow = true;
 
@@ -168,7 +168,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
       }
 
 
-      if (node.name == "hands") {
+      if (node.name === "hands") {
         node.castShadow = true;
         node.receiveShadow = true;
 
@@ -191,7 +191,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
 
 
       }
-      if (node.name == "eyeL") {
+      if (node.name === "eyeL") {
         node.material = new MeshStandardMaterial();
         node.material.map = eyesTexture;
         node.material.shininess = 100;
@@ -201,7 +201,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
 
       }
 
-      if (node.name == "tshirt") {
+      if (node.name === "tshirt") {
         node.material = new MeshStandardMaterial();
         node.material.map = tshirtDiffuseTexture;
         node.material.roughnessMap = tshirtRoughnessTexture;
@@ -210,7 +210,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         node.material.envMapIntensity = 0.5;
       }
 
-      if (node.name == "skirt") {
+      if (node.name === "skirt") {
         node.material = new MeshStandardMaterial();
         node.material.map = skirtDiffuseTexture;
         node.material.roughnessMap = skirtRoughnessTexture;
@@ -219,7 +219,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         node.material.envMapIntensity = 0.5;
       }
 
-      if (node.name == "shoes") {
+      if (node.name === "shoes") {
         node.material = new MeshStandardMaterial();
         node.material.map = shoesDiffuseTexture;
         node.material.roughnessMap = shoesRoughnessTexture;
@@ -274,19 +274,19 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
             }
       */
 
-      if (node.name == "gums_lower") {
+      if (node.name === "gums_lower") {
         morphTargetDictionaryLowerGum = node.morphTargetDictionary;
       }
-      if (node.name == "tongue") {
+      if (node.name === "tongue") {
         morphTargetDictionaryTongue = node.morphTargetDictionary;
       }
-      if (node.name == "teeth_lower") {
+      if (node.name === "teeth_lower") {
         morphTargetDictionaryLowerteeth = node.morphTargetDictionary;
       }
-      if (node.name == "Upper_Eyelash") {
+      if (node.name === "Upper_Eyelash") {
         morphTargetDictionaryUpperEyeLash = node.morphTargetDictionary;
       }
-      if (node.name == "Lower_Eyelash") {
+      if (node.name === "Lower_Eyelash") {
         morphTargetDictionaryLowerEyeLash = node.morphTargetDictionary;
       }
 
@@ -398,7 +398,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
   const mixer = useMemo(() => new THREE.AnimationMixer(gltf.scene), []);
   useEffect(() => {
     // Replace this URL with the actual URL/path of the text file you want to read.
-    const fileUrl = '/chatbot001/ContextFile.txt';
+    const fileUrl = '/ContextFile.txt';
 
     // Fetch the file content using a GET request.
     fetch(fileUrl)
@@ -446,7 +446,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
     ResetResetTimer();
     canSpeak = false;
     if (firstTime) {
-      audioPlayer.current.audioEl.current.src = "/chatbot001/zero.mp3";
+      audioPlayer.current.audioEl.current.src = "/zero.mp3";
       //audioPlayer.current.audioEl.current.muted = true;
       //audioPlayer.current.audioEl.current.play();
     }
@@ -467,11 +467,11 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
 
     recognition.addEventListener('speechend', speechEndHandler);
 
-    if (speech == true) {
+    if (speech === true) {
       recognition.start();
       timeoutId = setTimeout(() => {
         recognition.stop();
-        if (voiceMessage == "") canSpeak = true;
+        if (voiceMessage === "") canSpeak = true;
       }, customTimeout);
     }
 
@@ -496,7 +496,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
   function speechEndHandler() {
 
     //console.log('Texte: ' + voiceMessage);
-    if (voiceMessage == "") {
+    if (voiceMessage === "") {
       canSpeak = true;
       return;
     }
@@ -511,7 +511,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
     thinkingDiv.style.display = "block";
     waitingDiv.style.display = "none";
     console.log("TEXT", voiceMessage, "LANG", recognition.lang);
-    if (recognition.lang == 'ar-TN') {
+    if (recognition.lang === 'ar-TN') {
       if (voiceMessage.includes("تغيير") && voiceMessage.includes("فرنسيه")) {
         langIndex = 54
         //CHANGE TO FRENCH
@@ -541,7 +541,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         return;
       }
     }
-    else if (recognition.lang == 'fr-FR') {
+    else if (recognition.lang === 'fr-FR') {
       if (voiceMessage.includes("change") && voiceMessage.includes("arabe")) {
         //CHANGE TO FRENCH
         recognition.lang = 'ar-TN';
@@ -571,7 +571,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         return;
       }
     }
-    else if (recognition.lang == 'en-US') {
+    else if (recognition.lang === 'en-US') {
       if (voiceMessage.includes("change") && voiceMessage.includes("Arabic")) {
         //CHANGE TO FRENCH
         recognition.lang = 'ar-TN';
@@ -611,7 +611,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
       .then(response => {
         //TODO STOP LOADING
         //setLoading(false);
-        let { blendData, filename, filena, speech } = response.data;
+        let { blendData, filena, speech } = response.data;
         let newClips = [
           createAnimation(blendData, morphTargetDictionaryBody, 'head'),
           createAnimation(blendData, morphTargetDictionaryLowerteeth, 'teeth_lower'),
@@ -624,10 +624,10 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
 
         //TODO
 
-        filename = host + filename;
+        // filename = host + filename;
         setClips(newClips);
         console.log("SI",speech,langIndex);
-        setAudioSource("/chatbot001/zero.mp3");
+        setAudioSource("/zero.mp3");
         easySpeak(speech,langIndex).then(() => {
           console.log("DONE");
           setAudioSource(null);
@@ -635,7 +635,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
         });
         
         subtitleFileName = filena;
-        if (language == "arabic" || language == "french") {
+        if (language === "arabic" || language === "french") {
           currentSubtitle = speech;
         }
         reset = false;
@@ -646,7 +646,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
       })
   }
   //TODO
-  //let idleFbx = useFBX('/chatbot001/model2/Idle.fbx');
+  //let idleFbx = useFBX('/model2/Idle.fbx');
   /*let { clips: idleClips } = useAnimations(idleFbx.animations);
   idleClips[0].tracks = _.filter(idleClips[0].tracks, track => {
     return track.name.includes("Head") || track.name.includes("Neck") || track.name.includes("Spine2");
@@ -738,13 +738,13 @@ function clearStorage() {
   firstTime = false;
 }
 
-const STYLES = {
-  area: { position: 'absolute', bottom: '10px', left: '10px', zIndex: 500 },
-  text: { margin: '0px', width: '300px', padding: '5px', background: 'none', color: '#ffffff', fontSize: '1.2em', border: 'none' },
-  speak: { padding: '10px', marginTop: '5px', display: 'block', color: '#FFFFFF', background: '#222222', border: 'None' },
-  area2: { position: 'absolute', top: '5px', right: '15px', zIndex: 500 },
-  label: { color: '#777777', fontSize: '0.8em' }
-}
+// const STYLES = {
+//   area: { position: 'absolute', bottom: '10px', left: '10px', zIndex: 500 },
+//   text: { margin: '0px', width: '300px', padding: '5px', background: 'none', color: '#ffffff', fontSize: '1.2em', border: 'none' },
+//   speak: { padding: '10px', marginTop: '5px', display: 'block', color: '#FFFFFF', background: '#222222', border: 'None' },
+//   area2: { position: 'absolute', top: '5px', right: '15px', zIndex: 500 },
+//   label: { color: '#777777', fontSize: '0.8em' }
+// }
 
 function App() {
   let zeroDiv = document.getElementById("stateZeroDiv");
@@ -756,11 +756,11 @@ function App() {
   const [text, setText] = useState("Write your context here ..");
   const [audioSource, setAudioSource] = useState(null);
   const [playing, setPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
+  // const [currentTime, setCurrentTime] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const [selectedVoice, setSelectedVoice] = useState();
-  const [selectedIndex, setSelectedIndex] = useState();
+  // const [selectedVoice, setSelectedVoice] = useState();
+  // const [selectedIndex, setSelectedIndex] = useState();
   const [language, setLanguage] = useState('fr-FR');
   const [voices, setVoices] = useState([]);
   const populateVoiceList = useCallback(() => {
@@ -769,6 +769,8 @@ function App() {
     console.log("VOICES", newVoices);
   }, []);
 
+  let synth = EasySpeech.detect()
+
   useEffect(() => {
     populateVoiceList();
     if (synth.onvoiceschanged !== undefined) {
@@ -776,7 +778,6 @@ function App() {
     }
   }, [populateVoiceList]);
 
-  let synth = EasySpeech.detect()
   EasySpeech.init({ maxTimeout: 5000, interval: 250 })
     .then(() => console.log('load complete'))
     .catch(e => console.error(e))
@@ -829,22 +830,22 @@ function App() {
   }
 
 
-  function StartResetTimer() {
-    //console.log('Timer started');
-    timerResetId = setTimeout(function () {
-      //STATE ZERO
-      //console.log('STATE ZERO');
-      zeroDiv.style.display = "block";
-      listeningDiv.style.display = "none";
-      thinkingDiv.style.display = "none";
-      waitingDiv.style.display = "none";
-      reset = true;
-    }, resetTimeout); // Set a timer for 5 seconds (5000 milliseconds)
-  }
+  // function StartResetTimer() {
+  //   //console.log('Timer started');
+  //   timerResetId = setTimeout(function () {
+  //     //STATE ZERO
+  //     //console.log('STATE ZERO');
+  //     zeroDiv.style.display = "block";
+  //     listeningDiv.style.display = "none";
+  //     thinkingDiv.style.display = "none";
+  //     waitingDiv.style.display = "none";
+  //     reset = true;
+  //   }, resetTimeout); // Set a timer for 5 seconds (5000 milliseconds)
+  // }
 
   const handleListen = (time) => {
-    if (language == "english") {
-      setCurrentTime(time);
+    if (language === "english") {
+      // setCurrentTime(time);
       const value = convertedTimes[indexer];
       if (time > value) {
         currentSubtitle = stringList[indexer];
@@ -878,7 +879,7 @@ function App() {
     audioPlayer.current.audioEl.current.play();
     setPlaying(true);
     if (!firstTime) {
-      if (language == "english") CreatingSubtitlesFromFile();
+      if (language === "english") CreatingSubtitlesFromFile();
       //STATE SPEAKING
       //console.log("STATE SPEAKING");
       zeroDiv.style.display = "none";
@@ -936,11 +937,7 @@ function App() {
   <button id="hidebtn" onClick={() => { document.getElementById("area").style.display = 'none'; document.getElementById("hidebtn").style.display = 'none'; }} style={STYLES.speak}> {speak ? 'HIDE' : 'HIDE'}</button>
   */
   /*
-      <div className="countries-icons">
-        <img id="france" src="/chatbotobjlolpokl/images/france.png" alt="francais" />
-        <img id="tunisie" src="/chatbotobjlolpokl/images/tunisia.png" alt="arabe" />
-        <img id="british" src="/chatbotobjlolpokl/images/united-kingdom.png" alt="anglais" />
-      </div>
+    
 
 
             <div style={STYLES.area}>
@@ -988,7 +985,7 @@ function App() {
       /> */}
 
         <Suspense fallback={null}>
-          <Environment background={false} files="/chatbot001/images/photo_studio_loft_hall_1k.hdr" />
+          <Environment background={false} files="/images/photo_studio_loft_hall_1k.hdr" />
         </Suspense>
 
         <Suspense fallback={null}>
@@ -1001,7 +998,7 @@ function App() {
 
           <Avatar
             //avatar_url="/ac.glb"
-            avatar_url="/chatbot001/model/trial.gltf"
+            avatar_url="/model/trial.gltf"
             speak={speak}
             setSpeak={setSpeak}
             text={text}
@@ -1010,7 +1007,7 @@ function App() {
             setLoading={setLoading}
             audioPlayer={audioPlayer}
             easySpeak={easySpeak}
-            selectedVoice={selectedVoice}
+            // selectedVoice={selectedVoice}
             playerEnded={playerEnded}
             setIdle={setIdle}
           />
@@ -1020,24 +1017,24 @@ function App() {
       
       <Loader dataInterpolation={(p) => `Loading... please wait`} />
       <div id="topRightImageContainer">
-        <img src="/chatbot001/images/QrCode.png" alt="Top Right Image" id="topRightImage" />
+        <img src="/images/QrCode.png" alt="Top Right Img" id="topRightImage" />
       </div>
       <div id="roundedDiv">
-        <img src="/chatbot001/images/arrow.png" alt="Arrow" className="center-image" style={{ order: 2 }} />
-        <img src="/chatbot001/images/mouvmntLogo.png" alt="Mouvmnt Logo" id="mouvmntLogo" style={{ order: 1 }} />
+        <img src="/images/arrow.png" alt="Arrow" className="center-image" style={{ order: 2 }} />
+        <img src="/images/mouvmntLogo.png" alt="Mouvmnt Logo" id="mouvmntLogo" style={{ order: 1 }} />
       </div>
       <div id='stateZeroDiv' style={{ display: 'block' }}>
-        <img src="/chatbot001/images/aiBubble.png" alt="AI Bubble" className="bottom-right" />
-        <img src="/chatbot001/images/bubbles.png" alt="Bubbles" className="bottom-center small-image" />
+        <img src="/images/aiBubble.png" alt="AI Bubble" className="bottom-right" />
+        <img src="/images/bubbles.png" alt="Bubbles" className="bottom-center small-image" />
       </div>
       <div id='stateWaitingDiv' style={{ display: 'none' }}>
-        <img src="/chatbot001/images/helloBubble.png" alt="Hello Bubble" className="bottom-right" />
+        <img src="/images/helloBubble.png" alt="Hello Bubble" className="bottom-right" />
       </div>
       <div id='stateListeningDiv' style={{ display: 'none' }}>
-        <img src="/chatbot001/images/listeningBubble.png" alt="Listen Bubble" className="bottom-right" />
+        <img src="/images/listeningBubble.png" alt="Listen Bubble" className="bottom-right" />
       </div>
       <div id='stateThinkingDiv' style={{ display: 'none' }}>
-        <img src="/chatbot001/images/thinkingBubble.png" alt="Think Bubble" className="bottom-right" />
+        <img src="/images/thinkingBubble.png" alt="Think Bubble" className="bottom-right" />
       </div>
       <Subtitles text={currentSubtitle} />
     </div>
@@ -1045,7 +1042,7 @@ function App() {
 }
 
 function Bg() {
-  const texture = useTexture('/chatbot001/images/Background LOUNA.png');
+  const texture = useTexture('/images/Background LOUNA.png');
   return (
     <mesh position={[0, 1.5, -2]} scale={[2, 2, 2]}>
       <planeBufferGeometry />
