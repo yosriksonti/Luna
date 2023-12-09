@@ -52,7 +52,7 @@ let langIndex = 9
 
 // Create a SpeechConfig object with your endpoint and key
 //const speechConfig = sdk.SpeechConfig.fromEndpoint(urll, apiKey);
-function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, setLoading, audioPlayer, easySpeak, playerEnded, setIdle, setPlaying, frLang, enLang, arLang }) {
+function Avatar({ avatar_url, setSpeak, text, setAudioSource, playing, easySpeak, playerEnded, setIdle, setPlaying, frLang, enLang, arLang }) {
   let zeroDiv = document.getElementById("stateZeroDiv");
   let waitingDiv = document.getElementById("stateWaitingDiv");
   let listeningDiv = document.getElementById("stateListeningDiv");
@@ -447,7 +447,7 @@ function Avatar({ avatar_url, speak, setSpeak, text, setAudioSource, playing, se
     ResetResetTimer();
     canSpeak = false;
     if (firstTime) {
-      audioPlayer.current.audioEl.current.src = "/zero.mp3";
+      // audioPlayer.current.audioEl.current.src = "/zero.mp3";
       //audioPlayer.current.audioEl.current.muted = true;
       //audioPlayer.current.audioEl.current.play();
     }
@@ -1012,15 +1012,7 @@ function App() {
           color='red' />
       </div>
 
-      <ReactAudioPlayer
-        src={audioSource}
-        ref={audioPlayer}
-        onEnded={playerEnded}
-        onLoadedMetadata={playerReady}
-        listenInterval={500}
-        onListen={handleListen}
-        onError={handleError}
-      />
+      
 
       {/* <Stats /> */}
       <Canvas dpr={2} onCreated={(ctx) => {
@@ -1052,15 +1044,11 @@ function App() {
           <Avatar
             //avatar_url="/ac.glb"
             avatar_url="/model/trial.gltf"
-            speak={speak}
             setSpeak={setSpeak}
             text={text}
             setAudioSource={setAudioSource}
             playing={playing}
-            setLoading={setLoading}
-            audioPlayer={audioPlayer}
             easySpeak={easySpeak}
-            // selectedVoice={selectedVoice}
             playerEnded={playerEnded}
             setIdle={setIdle}
             setPlaying={setPlaying}
