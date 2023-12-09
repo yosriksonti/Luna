@@ -452,7 +452,7 @@ function Avatar({ avatar_url, setSpeak, text, setAudioSource, playing, easySpeak
       //audioPlayer.current.audioEl.current.play();
     }
     var speech = true;
-    window.SpeechRecognition = window.webkitSpeechRecognition;
+    // window.SpeechRecognition = window.webkitSpeechRecognition;
     //startRecording(); // Start recording audio
     /*if (recognition.lang == "") {
       document.getElementById('tunisie').style.display = 'none';
@@ -644,6 +644,10 @@ function Avatar({ avatar_url, setSpeak, text, setAudioSource, playing, easySpeak
           console.log("DONE");
           setAudioSource(null)
           stopAnimation()
+          playerEnded()
+          setIdle();
+        }).catch(() => {
+          setAudioSource(null)
           playerEnded()
           setIdle();
         });
