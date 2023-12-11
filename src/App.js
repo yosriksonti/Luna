@@ -5,13 +5,11 @@ import { MeshStandardMaterial } from 'three/src/materials/MeshStandardMaterial';
 import SyncLoader from "react-spinners/SyncLoader";
 import { LinearEncoding, sRGBEncoding } from 'three/src/constants';
 import { MeshPhysicalMaterial } from 'three';
-import ReactAudioPlayer from 'react-audio-player';
 import './App.css'; // Import the external CSS file
 import createAnimation from './converter';
 import blinkData from './blendDataBlink.json';
 // import TalkData from './blendDataTalk.json';
 // import ShutData from './blendDataShut.json';
-import EasySpeech from 'easy-speech'
 
 // import VoiceSelector from './components/VoiceSelector';
 
@@ -52,7 +50,7 @@ let langIndex = 9
 
 // Create a SpeechConfig object with your endpoint and key
 //const speechConfig = sdk.SpeechConfig.fromEndpoint(urll, apiKey);
-function Avatar({ avatar_url, setSpeak, text, setAudioSource, playing, easySpeak, playerEnded, setIdle, setPlaying, frLang, enLang, arLang }) {
+function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, setPlaying, frLang, enLang, arLang, voices }) {
   let zeroDiv = document.getElementById("stateZeroDiv");
   let waitingDiv = document.getElementById("stateWaitingDiv");
   let listeningDiv = document.getElementById("stateListeningDiv");
@@ -114,7 +112,7 @@ function Avatar({ avatar_url, setSpeak, text, setAudioSource, playing, easySpeak
     t.encoding = sRGBEncoding;
     t.flipY = false;
   });
-
+  const synth = window.speechSynthesis;
   tshirtNormalTexture.encoding = LinearEncoding;
   gltf.scene.traverse(node => {
     if (node.type === 'Mesh' || node.type === 'LineSegments' || node.type === 'SkinnedMesh') {
@@ -452,7 +450,7 @@ function Avatar({ avatar_url, setSpeak, text, setAudioSource, playing, easySpeak
       //audioPlayer.current.audioEl.current.play();
     }
     var speech = true;
-    window.SpeechRecognition = window.webkitSpeechRecognition;
+    // window.SpeechRecognition = window.webkitSpeechRecognition;
     //startRecording(); // Start recording audio
     /*if (recognition.lang == "") {
       document.getElementById('tunisie').style.display = 'none';
@@ -640,13 +638,27 @@ function Avatar({ avatar_url, setSpeak, text, setAudioSource, playing, easySpeak
         }
         setPlaying(true)
         animate(newClips);
-        easySpeak(speech,langIndex).then(() => {
+        const utterance = new SpeechSynthesisUtterance()
+        utterance.text = speech
+        utterance.voice = voices[langIndex]
+        utterance.addEventListener("end", () => {
           console.log("DONE");
-          setAudioSource(null)
           stopAnimation()
           playerEnded()
           setIdle();
         });
+        window.speechSynthesis.speak(utterance)
+        // easySpeak(speech,langIndex).then(() => {
+        //   console.log("DONE");
+        //   setAudioSource(null)
+        //   stopAnimation()
+        //   playerEnded()
+        //   setIdle();
+        // }).catch(() => {
+        //   setAudioSource(null)
+        //   playerEnded()
+        //   setIdle();
+        // });
         reset = false;
 
 
@@ -794,7 +806,6 @@ function App() {
   let waitingDiv = document.getElementById("stateWaitingDiv");
   let listeningDiv = document.getElementById("stateListeningDiv");
   let thinkingDiv = document.getElementById("stateThinkingDiv");
-  const audioPlayer = useRef();
   const [speak, setSpeak] = useState(false);
   const [text, setText] = useState("Write your context here ..");
   const [audioSource, setAudioSource] = useState(null);
@@ -809,8 +820,10 @@ function App() {
   const [frLang, setFrLang] = useState(9);
   const [enLang, setEnLang] = useState(5);
   const [arLang, setArLang] = useState(30);
+  const synth = window.speechSynthesis;
+
   const populateVoiceList = useCallback(() => {
-    const newVoices = EasySpeech.voices();
+    const newVoices = synth.getVoices();
     setVoices(newVoices);
     console.log("VOICES", newVoices);
   }, []);
@@ -822,30 +835,16 @@ function App() {
     setArLang(voices.findIndex(voice => voice.lang === 'ar-SA'));
     console.log("LANGS", fr);
   }, [voices]);
-  let synth = EasySpeech.detect()
-
   useEffect(() => {
     populateVoiceList();
     if (synth.onvoiceschanged !== undefined) {
       synth.onvoiceschanged = populateVoiceList;
     }
   }, [populateVoiceList]);
+  
 
-  EasySpeech.init({ maxTimeout: 5000, interval: 250 })
-    .then(() => console.log('load complete'))
-    .catch(e => console.error(e))
 
-  const easySpeak = async (speech, index) => {
-    await EasySpeech.speak({
-      text: speech,
-      voice: voices[index], // optional, will use a default or fallback
-      pitch: 1.2,
-      rate: 0.8,
-      volume: 1,
-      // there are more events, see the API for supported events
-      boundary: e => console.debug('boundary reached')
-    })
-  };
+  
 
   // End of play
   function playerEnded(e) {
@@ -896,51 +895,7 @@ function App() {
   //   }, resetTimeout); // Set a timer for 5 seconds (5000 milliseconds)
   // }
 
-  const handleListen = (time) => {
-    if (language === "english") {
-      // setCurrentTime(time);
-      const value = convertedTimes[indexer];
-      if (time > value) {
-        currentSubtitle = stringList[indexer];
-        indexer += 1;
-      }
-    }
-  };
-
-  const handleError = () => {
-    //TODO HANDLING ERROR
-    //console.log("error happened");
-    //setLoading(false);
-    //STATE WAITING
-    //console.log("STATE WAITING");
-    zeroDiv.style.display = "none";
-    listeningDiv.style.display = "none";
-    thinkingDiv.style.display = "none";
-    waitingDiv.style.display = "block";
-    //  document.getElementById("click_to_record").style.display = "inline";
-    canSpeak = true;
-    setAudioSource(null);
-    setSpeak(false);
-    setPlaying(false);
-    currentSubtitle = "";
-    clearStorage();
-
-  };
-
-  // Player is read
-  function playerReady(e) {
-    //audioPlayer.current.audioEl.current.play();
-    setPlaying(true);
-    if (!firstTime) {
-      if (language === "english") CreatingSubtitlesFromFile();
-      //STATE SPEAKING
-      //console.log("STATE SPEAKING");
-      zeroDiv.style.display = "none";
-      listeningDiv.style.display = "none";
-      thinkingDiv.style.display = "none";
-      waitingDiv.style.display = "none";
-    }
-  }
+  
 
   /*
     function checkSound() {
@@ -1046,15 +1001,14 @@ function App() {
             avatar_url="/model/trial.gltf"
             setSpeak={setSpeak}
             text={text}
-            setAudioSource={setAudioSource}
             playing={playing}
-            easySpeak={easySpeak}
             playerEnded={playerEnded}
             setIdle={setIdle}
             setPlaying={setPlaying}
             frLang={frLang}
             enLang={enLang}
             arLang={arLang}
+            voices={voices}
           />
           
         </Suspense>
