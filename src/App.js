@@ -835,6 +835,9 @@ function App() {
     let en = voices.findIndex(voice => voice.lang === 'fr-AU') || voices.findIndex(voice => voice.lang === 'en-GB')
     let ar = voices.findIndex(voice => voice.lang === 'ar-SA') || voices.findIndex(voice => voice.lang === 'ar-TN')
     console.log("FR",fr)
+    _.each(voices, (voice,index) => {
+      console.log("VOICE",voice.lang,index)
+    })
     langIndex = fr
     setFrLang(fr);
     setEnLang(en);
