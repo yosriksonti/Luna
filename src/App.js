@@ -52,6 +52,7 @@ let langIndex = 9
 //const speechConfig = sdk.SpeechConfig.fromEndpoint(urll, apiKey);
 function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, setPlaying, frLang, enLang, arLang, voices }) {
   let zeroDiv = document.getElementById("stateZeroDiv");
+  let playDiv = document.getElementById("statePlayDiv");
   let waitingDiv = document.getElementById("stateWaitingDiv");
   let listeningDiv = document.getElementById("stateListeningDiv");
   let thinkingDiv = document.getElementById("stateThinkingDiv");
@@ -438,6 +439,7 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
     //STATE LISTENING
     //console.log("STATE LISTENING");
     zeroDiv.style.display = "none";
+    playDiv.style.display = "none";
     listeningDiv.style.display = "block";
     thinkingDiv.style.display = "none";
     waitingDiv.style.display = "none";
@@ -506,6 +508,7 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
     //STATE THINKING
     //console.log("STATE THINKING");
     zeroDiv.style.display = "none";
+    playDiv.style.display = "none";
     listeningDiv.style.display = "none";
     thinkingDiv.style.display = "block";
     waitingDiv.style.display = "none";
@@ -636,21 +639,29 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
         if (language === "arabic" || language === "french") {
           currentSubtitle = speech;
         }
-        setPlaying(true)
-        animate(newClips);
         const utterance = new SpeechSynthesisUtterance()
         utterance.text = speech
         utterance.voice = voices[langIndex]
+        zeroDiv.style.display = "none";
+        playDiv.style.display = "block";
+        listeningDiv.style.display = "none";
+        thinkingDiv.style.display = "none";
+        waitingDiv.style.display = "none";
+        playDiv.addEventListener('click', () => {
+          setPlaying(true)
+          animate(newClips);
+          window.speechSynthesis.speak(utterance)
+        });
         utterance.addEventListener("start", () => {
           console.log("START",voices[langIndex]);
         });
+        
         utterance.addEventListener("end", () => {
           console.log("DONE");
           stopAnimation()
           playerEnded()
           setIdle();
         });
-        window.speechSynthesis.speak(utterance)
         // easySpeak(speech,langIndex).then(() => {
         //   console.log("DONE");
         //   setAudioSource(null)
@@ -806,6 +817,7 @@ function clearStorage() {
 
 function App() {
   let zeroDiv = document.getElementById("stateZeroDiv");
+  let playDiv = document.getElementById("statePlayDiv");
   let waitingDiv = document.getElementById("stateWaitingDiv");
   let listeningDiv = document.getElementById("stateListeningDiv");
   let thinkingDiv = document.getElementById("stateThinkingDiv");
@@ -880,6 +892,7 @@ function App() {
       //STATE WAITING
       //console.log("STATE WAITING");
       zeroDiv.style.display = "none";
+      playDiv.style.display = "none";
       listeningDiv.style.display = "none";
       thinkingDiv.style.display = "none";
       waitingDiv.style.display = "block";
@@ -1033,6 +1046,9 @@ function App() {
       <div id='stateZeroDiv' style={{ display: 'block' }}>
         <img src="/images/aiBubble.png" alt="AI Bubble" className="bottom-right" />
         <img src="/images/bubbles.png" alt="Bubbles" className="bottom-center small-image" />
+      </div>
+      <div id='statePlayDiv' style={{ display: 'none' }}>
+        <img src="/images/arrow.png" alt="Play Bubble" className="bottom-right" />
       </div>
       <div id='stateWaitingDiv' style={{ display: 'none' }}>
         <img src="/images/helloBubble.png" alt="Hello Bubble" className="bottom-right" />
