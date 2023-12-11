@@ -641,6 +641,9 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
         const utterance = new SpeechSynthesisUtterance()
         utterance.text = speech
         utterance.voice = voices[langIndex]
+        utterance.addEventListener("start", () => {
+          console.log("START",voices[langIndex]);
+        });
         utterance.addEventListener("end", () => {
           console.log("DONE");
           stopAnimation()
@@ -828,12 +831,14 @@ function App() {
     console.log("VOICES", newVoices);
   }, []);
   useEffect(() => {
-    let fr = voices.findIndex(voice => voice.lang === 'fr-CA')
+    let fr = voices.findIndex(voice => voice.lang === 'fr-CA') || voices.findIndex(voice => voice.lang === 'fr-FR')
+    let en = voices.findIndex(voice => voice.lang === 'fr-AU') || voices.findIndex(voice => voice.lang === 'en-GB')
+    let ar = voices.findIndex(voice => voice.lang === 'ar-SA') || voices.findIndex(voice => voice.lang === 'ar-TN')
+    console.log("FR",fr)
     langIndex = fr
-    setFrLang(voices.findIndex(voice => voice.lang === 'fr-CA'));
-    setEnLang(voices.findIndex(voice => voice.lang === 'en-AU'));
-    setArLang(voices.findIndex(voice => voice.lang === 'ar-SA'));
-    console.log("LANGS", fr);
+    setFrLang(fr);
+    setEnLang(en);
+    setArLang(ar);
   }, [voices]);
   useEffect(() => {
     populateVoiceList();
