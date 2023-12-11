@@ -654,10 +654,10 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
           window.speechSynthesis.speak(utterance)
         }
         playDiv.addEventListener('click', speak);
+        playDiv.click()
         utterance.addEventListener("start", () => {
           console.log("START",voices[langIndex]);
         });
-        
         utterance.addEventListener("end", () => {
           console.log("DONE");
           playDiv.removeEventListener("click",speak)
