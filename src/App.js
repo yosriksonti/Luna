@@ -648,10 +648,10 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
         thinkingDiv.style.display = "none";
         waitingDiv.style.display = "none";
         const speak = () => {
+          window.speechSynthesis.speak(utterance)
           console.log("SPEECH",utterance.text)
           setPlaying(true)
           animate(newClips);
-          window.speechSynthesis.speak(utterance)
         }
         playDiv.addEventListener('click', speak);
         playDiv.click()
@@ -824,6 +824,7 @@ function App() {
   let waitingDiv = document.getElementById("stateWaitingDiv");
   let listeningDiv = document.getElementById("stateListeningDiv");
   let thinkingDiv = document.getElementById("stateThinkingDiv");
+  
   const [speak, setSpeak] = useState(false);
   const [text, setText] = useState("Write your context here ..");
   const [audioSource, setAudioSource] = useState(null);
