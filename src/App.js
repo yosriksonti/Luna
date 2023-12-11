@@ -647,17 +647,20 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
         listeningDiv.style.display = "none";
         thinkingDiv.style.display = "none";
         waitingDiv.style.display = "none";
-        playDiv.addEventListener('click', () => {
+        const speak = () => {
+          console.log("SPEECH",utterance.text)
           setPlaying(true)
           animate(newClips);
           window.speechSynthesis.speak(utterance)
-        });
+        }
+        playDiv.addEventListener('click', speak);
         utterance.addEventListener("start", () => {
           console.log("START",voices[langIndex]);
         });
         
         utterance.addEventListener("end", () => {
           console.log("DONE");
+          playDiv.removeEventListener("click",speak)
           stopAnimation()
           playerEnded()
           setIdle();
