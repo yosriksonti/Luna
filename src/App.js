@@ -47,11 +47,25 @@ let reset = false;
 let gltf;
 
 let langIndex = 9
+let added = false
 
 // Create a SpeechConfig object with your endpoint and key
 //const speechConfig = sdk.SpeechConfig.fromEndpoint(urll, apiKey);
 function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, setPlaying, frLang, enLang, arLang, voices }) {
-  
+  function addClickedListener(){
+    document.addEventListener("click", handleDocumentPress);
+    const helloUt = new SpeechSynthesisUtterance()
+    helloUt.text = "Salut!"
+    helloUt.voice = voices[langIndex]
+    window.speechSynthesis.speak(helloUt)
+    console.log('EVENT LISTENER')
+    added = true
+  }
+  useEffect( () => {
+    if(added === false) {
+      playDiv.addEventListener("click",addClickedListener)
+    }
+  }, [])
   let zeroDiv = document.getElementById("stateZeroDiv");
   let playDiv = document.getElementById("statePlayDiv");
   let waitingDiv = document.getElementById("stateWaitingDiv");
@@ -295,11 +309,11 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
 
 
     }
-    playDiv.addEventListener("click", () => {
-      document.addEventListener("click", handleDocumentPress);
-    })
+    
   });
 
+  
+  
   // Define a function to be called when the keyboard button is pressed
   const handleKeyPress = (event) => {
     if (event.key === 's' || event.key === 'S') { // Check for both lowercase and uppercase "S"
@@ -448,7 +462,8 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
     listeningDiv.style.display = "block";
     thinkingDiv.style.display = "none";
     waitingDiv.style.display = "none";
-
+    
+    playDiv.removeEventListener("click",addClickedListener)
     ResetResetTimer();
     canSpeak = false;
     if (firstTime) {
