@@ -51,11 +51,13 @@ let langIndex = 9
 // Create a SpeechConfig object with your endpoint and key
 //const speechConfig = sdk.SpeechConfig.fromEndpoint(urll, apiKey);
 function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, setPlaying, frLang, enLang, arLang, voices }) {
+  
   let zeroDiv = document.getElementById("stateZeroDiv");
   let playDiv = document.getElementById("statePlayDiv");
   let waitingDiv = document.getElementById("stateWaitingDiv");
   let listeningDiv = document.getElementById("stateListeningDiv");
   let thinkingDiv = document.getElementById("stateThinkingDiv");
+  
   gltf = useGLTF(avatar_url);
   let morphTargetDictionaryBody = null;
   let morphTargetDictionaryLowerGum = null;
@@ -293,7 +295,9 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
 
 
     }
-
+    playDiv.addEventListener("click", () => {
+      document.addEventListener("click", handleDocumentPress);
+    })
   });
 
   // Define a function to be called when the keyboard button is pressed
@@ -318,10 +322,7 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
     }*/
   };
 
-  const handleDocumentPress = () => {
-    console.log('document pressed!');
-    if (canSpeak) StartSpeaking();
-  };
+  
 
   /*function PlayTalkAnimation() {
     let talkHeadClip = createAnimation(TalkData, morphTargetDictionaryBody, 'head');
@@ -418,23 +419,27 @@ function Avatar({ avatar_url, setSpeak, text, playing, playerEnded, setIdle, set
 
 
   // Attach the event listener when the component mounts
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress);
+  // useEffect(() => {
+  //   window.addEventListener('keydown', handleKeyPress);
 
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, []);
+  //   // Clean up the event listener when the component unmounts
+  //   return () => {
+  //     window.removeEventListener('keydown', handleKeyPress);
+  //   };
+  // }, []);
 
   // Attach the event listener when the component mounts
-  useEffect(() => {
-    document.addEventListener("click", handleDocumentPress);
-    // Clean up the event listener when the component unmounts
-    return () => {
-      document.removeEventListener("click", handleDocumentPress);
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.addEventListener("click", handleDocumentPress);
+  //   // Clean up the event listener when the component unmounts
+  //   return () => {
+  //     document.removeEventListener("click", handleDocumentPress);
+  //   };
+  // }, []);
+  function handleDocumentPress() {
+    console.log('document pressed!');
+    if (canSpeak) StartSpeaking();
+  };
   function StartSpeaking() {
     //STATE LISTENING
     //console.log("STATE LISTENING");
@@ -825,6 +830,7 @@ function App() {
   let listeningDiv = document.getElementById("stateListeningDiv");
   let thinkingDiv = document.getElementById("stateThinkingDiv");
   
+  
   const [speak, setSpeak] = useState(false);
   const [text, setText] = useState("Write your context here ..");
   const [audioSource, setAudioSource] = useState(null);
@@ -896,10 +902,10 @@ function App() {
       //STATE WAITING
       //console.log("STATE WAITING");
       zeroDiv.style.display = "none";
-      playDiv.style.display = "none";
+      playDiv.style.display = "block";
       listeningDiv.style.display = "none";
       thinkingDiv.style.display = "none";
-      waitingDiv.style.display = "block";
+      waitingDiv.style.display = "none";
       //START TIMER
     }
     //  document.getElementById("click_to_record").style.display = "inline";
@@ -1047,11 +1053,11 @@ function App() {
         <img src="/images/arrow.png" alt="Arrow" className="center-image" style={{ order: 2 }} />
         <img src="/images/mouvmntLogo.png" alt="Mouvmnt Logo" id="mouvmntLogo" style={{ order: 1 }} />
       </div>
-      <div id='stateZeroDiv' style={{ display: 'block' }}>
+      <div id='stateZeroDiv' style={{ display: 'none' }}>
         <img src="/images/aiBubble.png" alt="AI Bubble" className="bottom-right" />
         <img src="/images/bubbles.png" alt="Bubbles" className="bottom-center small-image" />
       </div>
-      <div id='statePlayDiv' style={{ display: 'none' }}>
+      <div id='statePlayDiv' style={{ display: 'block' }}>
         <img src="/images/arrow.png" alt="Play Bubble" className="bottom-right" />
       </div>
       <div id='stateWaitingDiv' style={{ display: 'none' }}>
